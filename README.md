@@ -1,19 +1,61 @@
 # KarTxt AI
 
-KarTxt AI is a React + FastAPI educational assistant for Karnataka students and teachers. The interface contains exactly the ten requested learning destinations, and all AI responses are generated through the configured local Ollama model.
+**A bilingual educational AI assistant for Karnataka learners and teachers.**
 
-## Run locally
+KarTxt AI is a React + FastAPI application that connects a learning workspace to a locally hosted language model through Ollama. It is designed to support educational workflows in English and Kannada.
 
-### Ollama
+## Highlights
 
-Install Ollama, then start the configured model:
+- English and Kannada response-language selection.
+- Responsive learning dashboard and feature routes.
+- Local model inference through Ollama.
+- FastAPI backend with request validation and centralized model configuration.
+- Timeout and error handling for model requests.
+- Frontend communicates with the backend API; it does not call Ollama directly.
+
+## Architecture
+
+```text
+Browser (React)
+     |
+     | HTTP API
+     v
+FastAPI backend
+     |
+     | Ollama API
+     v
+Local Gemma model
+```
+
+## Technology
+
+| Layer | Technology |
+|---|---|
+| Frontend | React, JavaScript/TypeScript tooling |
+| Backend | Python, FastAPI, Uvicorn |
+| Model runtime | Ollama |
+| Language model | Configured Gemma model |
+| Local development | Vite frontend and Python virtual environment |
+
+## Prerequisites
+
+- Python version compatible with `backend/requirements.txt`.
+- Node.js and npm.
+- [Ollama](https://ollama.com/) installed and running.
+- Sufficient RAM/compute for the selected model.
+
+## Run Locally
+
+### 1. Start Ollama
 
 ```powershell
 ollama pull gemma:latest
 ollama serve
 ```
 
-### Backend
+If Ollama is already running as a service, do not start a second instance. Ensure the configured model name matches the model available locally.
+
+### 2. Configure and start the backend
 
 ```powershell
 cd backend
@@ -24,17 +66,35 @@ Copy-Item .env.example .env
 uvicorn app.main:app --reload --port 8000
 ```
 
-### Frontend
+Review `.env.example` and set only the values required by your local configuration. Do not commit secrets.
 
-```powershell
+### 3. Start the frontend
+
+In a second terminal, from the repository root:
+
+```bash
 npm install
 npm run dev
 ```
 
-The frontend runs at `http://localhost:5173`. It never calls Ollama directly; requests go to the FastAPI service. Set `VITE_API_URL` when the backend runs at another address.
+The Vite development server is expected at [http://localhost:5173](http://localhost:5173). The backend is expected at [http://localhost:8000](http://localhost:8000).
 
-Use the **Response language** selector in the learning workspace to receive AI responses in either English or Kannada.
+Set `VITE_API_URL` if the backend is hosted at a different address.
 
-## Current scope
+## Current Scope
 
-The working baseline includes the responsive dashboard, language and theme controls, conversation handling, all ten feature routes, request validation, centralized Ollama configuration, timeout/error handling, and local AI integration. Persistent PostgreSQL data, authentication, and production deployment hardening remain follow-up work before production use.
+The documented baseline includes the dashboard, language and theme controls, conversation handling, learning feature routes, request validation, Ollama configuration, and local AI integration.
+
+Persistent PostgreSQL storage, authentication, and production deployment hardening are described as follow-up work; do not assume they are already implemented.
+
+## Safety and Responsible Use
+
+Use generated responses as learning assistance, not as an authoritative source. Verify important academic information against textbooks, instructors, and official materials. Do not send private student data to an untrusted model endpoint.
+
+## Contributing
+
+Open an issue for substantial changes. Use focused branches, include setup or test instructions, and document changes to model prompts, model configuration, and API behavior.
+
+## License
+
+No license is specified in this repository yet.
